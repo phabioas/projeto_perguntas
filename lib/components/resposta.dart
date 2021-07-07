@@ -1,14 +1,12 @@
 import 'package:flutter/material.dart';
 
 class Resposta extends StatelessWidget {
-  late final String _texto;
+  final String texto;
+  final int nota;
 
-  late final void Function()? _onPressed;
+  final void Function(int nota) responder;
 
-  Resposta({required String texto, required void Function()? onPressed}) {
-    this._texto = texto;
-    this._onPressed = onPressed;
-  }
+  Resposta({required this.texto, required this.responder, required this.nota});
 
   @override
   Widget build(BuildContext context) {
@@ -21,10 +19,10 @@ class Resposta extends StatelessWidget {
               elevation: 15,
               shadowColor: Colors.lightBlue),
           child: Text(
-            this._texto,
+            this.texto,
             style: TextStyle(color: Colors.white),
           ),
-          onPressed: _onPressed),
+          onPressed: () => responder(nota)),
     );
   }
 }

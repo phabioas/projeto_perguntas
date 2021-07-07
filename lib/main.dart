@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:projeto_perguntas/components/questao.dart';
-
-import 'components/resposta.dart';
+import 'package:projeto_perguntas/components/questionario.dart';
+import 'package:projeto_perguntas/components/resultado.dart';
+import 'package:projeto_perguntas/models/quiz.dart';
 
 void main() {
   runApp(new PerguntaApp());
@@ -14,41 +14,39 @@ class PerguntaApp extends StatefulWidget {
 
 class _PerguntaAppState extends State<PerguntaApp> {
   int _perguntaSelecionada = 0;
+  int _somaResposta = 0;
+  final List<Map<String, Object>> _perguntas = Quiz().getQuiz();
 
-  void responder() {
-    setState(() {
-      _perguntaSelecionada++;
-    });
+  void responder(int t) {
+    if (temPerguntaSelecionada) {
+      setState(() {
+        _somaResposta += t;
+        _perguntaSelecionada++;
+      });
+    }
+  }
+
+  bool get temPerguntaSelecionada {
+    return _perguntaSelecionada < _perguntas.length;
+  }
+
+  List<String> get listaRespostas {
+    return _perguntas[_perguntaSelecionada].cast()['resposta']['texto'];
   }
 
   @override
   Widget build(BuildContext context) {
-    final List<String> perguntas = [
-      'Qual sua cor favorita?',
-      'Qual seu animal favorito?'
-    ];
-
     return MaterialApp(
         home: Scaffold(
-            appBar: AppBar(
-              title: Center(child: Text('Perguntas')),
-            ),
-            body: Column(
-              children: [
-                Questao(perguntas.elementAt(_perguntaSelecionada)),
-                Resposta(
-                  texto: 'Resposta 1',
-                  onPressed: responder,
-                ),
-                Resposta(
-                  texto: 'Resposta 2',
-                  onPressed: responder,
-                ),
-                Resposta(
-                  texto: 'Resposta 3',
-                  onPressed: responder,
-                ),
-              ],
-            )));
+      appBar: AppBar(
+        title: Center(child: Text('Perguntas')),
+      ),
+      body: temPerguntaSelecionada
+          ? Questionario(
+              perguntas: _perguntas,
+              perguntaSelecionada: _perguntaSelecionada,
+              responder: (t) => responder(t))
+          : Resultado(somaResultado: this._somaResposta),
+    ));
   }
 }
