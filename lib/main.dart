@@ -26,6 +26,13 @@ class _PerguntaAppState extends State<PerguntaApp> {
     }
   }
 
+  void reiniciar() {
+    setState(() {
+      _somaResposta = 0;
+      _perguntaSelecionada = 0;
+    });
+  }
+
   bool get temPerguntaSelecionada {
     return _perguntaSelecionada < _perguntas.length;
   }
@@ -46,7 +53,8 @@ class _PerguntaAppState extends State<PerguntaApp> {
               perguntas: _perguntas,
               perguntaSelecionada: _perguntaSelecionada,
               responder: (t) => responder(t))
-          : Resultado(somaResultado: this._somaResposta),
+          : Resultado(
+              somaResultado: this._somaResposta, onPressed: this.reiniciar),
     ));
   }
 }
